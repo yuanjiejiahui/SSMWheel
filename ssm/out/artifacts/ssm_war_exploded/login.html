@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+</head>
+
+<body>
+    <div class="signup-form">
+        <form class="" action="" method="post">
+            <h1>Sign Up</h1>
+            <input type="text" placeholder="用户名" class="txtb" id="username">
+            <input type="password" placeholder="密码" class="txtb" id="passwd">
+            <input type="button" value="登录" class="signup-btn" id="btn">
+            <a href="reg.html">No account yet ?</a>
+        </form>
+    </div>
+
+<script src="js/jquery-3.6.0.js"></script>
+<script>
+    //给登录按钮绑定点击事件
+    $("#btn").click(function (){
+        //获取数据
+        var username = $("#username").val();
+        var passwd = $("#passwd").val();
+        //发送请求
+        $.ajax({
+            url:"emp/login",
+            type:"post",
+            port:8080,
+            data:{
+                username:username,
+                passwd:passwd
+            },
+            success: function (respTxt){
+                if (respTxt.data === -2){
+                    alert("用户名不存在！");
+                    alert(respTxt.message);
+                    return ;
+                }
+                if (respTxt.data === -1){
+                    alert("您输入的账户或密码错误！");
+                    alert(respTxt.message);
+                    return ;
+                }
+                alert("登录成功！");
+                alert(respTxt.data);
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

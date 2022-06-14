@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+</head>
+
+<body>
+<div class="signup-form">
+    <form class="" action="" method="post">
+        <h1>Sign In</h1>
+        <input type="text" placeholder="用户名" class="txtb" id="username">
+        <input type="password" placeholder="密码" class="txtb" id="passwd">
+        <input type="password" placeholder="确认密码" class="txtb" id="passwd2">
+        <input type="text" placeholder="姓名" class="txtb" id="ename">
+        <div class="sex">
+            <span>性别：</span>
+            <input class="dx" type="radio" name="esex" value="男" checked>男
+            <input class="dx" type="radio" name="esex" value="女">女
+        </div>
+        <input type="text" placeholder="电话" class="txtb" id="etel">
+        <input type="button" value="注册 " class="signup-btn" id="btn1">
+        <a href="login.html ">Already Have one ?</a>
+    </form>
+</div>
+<script src="js/jquery-3.6.0.js"></script>
+<script>
+    $("#btn1").click(function () {
+        //获取数据
+        var username = $("#username").val();
+        var passwd = $("#passwd").val();
+        var passwd2 = $("#passwd2").val();
+        var ename = $("#ename").val();
+        var esex;
+        if ($(".dx").get(0).checked) {
+            esex = '男';
+        } else {
+            esex = '女';
+        }
+        var etel = $("#etel").val();
+
+        //发送请求
+        $.ajax({
+            url: "emp/register",
+            type: "post",
+            port: "8080",
+            data: {
+                ename: ename,
+                esex: esex,
+                etel: etel,
+                username: username,
+                passwd: passwd
+            },
+            success: function (respTxt) {
+                if (respTxt.data === -1) {
+                    alert("用户名已存在!");
+                    alert(respTxt.message);
+                    return;
+                }
+                if (respTxt.data === 1) {
+                    alert("注册成功!");
+                    alert(respTxt.message);
+                    location.href = "login.html";
+                } else {
+                    alert("注册失败！");
+                    return;
+                }
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vector.mapper.EmpMapper">
+    
+<!--    注册-->
+    <insert id="addEmp" parameterType="Emp">
+        insert into emp values (null,#{ename},#{esex},#{etel},'01.jpg',#{username},#{passwd})
+    </insert>
+
+<!--    登录-->
+    <select id="findEmpByUsername" resultType="Emp">
+        select * from emp where username = #{username}
+    </select>
+</mapper>

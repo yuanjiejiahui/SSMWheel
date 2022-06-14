@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+">
+
+
+    <!--    扫描bean-->
+    <context:component-scan base-package="com.vector">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--    整合mybatis -->
+    <!--    将mybatis的配置交给spring配置-->
+    <!--    将mybatis的mapper 交给spring容器托管-->
+
+    <!--  数据源  -->
+    <!--    加载外部的properties文件-->
+    <context:property-placeholder location="classpath:druid.properties"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="DriverClassName" value="${jdbc.driverClassName}"/>
+        <property name="Url" value="${jdbc.url}"/>
+        <property name="Username" value="${jdbc.username}"/>
+        <property name="Password" value="${jdbc.password}"/>
+        <!-- 统计监控过滤器 -->
+        <property name="filters" value="stat"/>
+        <!-- 连接池设置 -->
+        <property name="maxActive" value="20"/>
+        <property name="initialSize" value="1"/>
+        <property name="maxWait" value="60000"/>
+        <property name="minIdle" value="1"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxOpenPreparedStatements" value="20"/>
+    </bean>
+
+    <!--   会话工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--        映射文件的路径-->
+        <property name="mapperLocations" value="classpath*:mapper/*.xml"/>
+
+        <!--        别名-->
+        <property name="typeAliasesPackage" value="com.vector.domain"/>
+    </bean>
+
+    <!--    实例化mapper-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.vector.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+</beans>
